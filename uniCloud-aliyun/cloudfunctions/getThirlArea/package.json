@@ -1,0 +1,7 @@
+{
+  "name": "getThirlArea",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}

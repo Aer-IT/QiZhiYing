@@ -1,0 +1,172 @@
+{
+		"easycom": {
+			"autoscan": true,
+			"custom": {
+				"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
+				"^uni-(.*)": "@/uni_modules/uni-$1/components/uni-$1/uni-$1.vue"
+			}
+		},
+	"pages": [ 
+		{
+			"path" : "pages/home/home",
+			"style" : {
+				"navigationBarTitleText" : "活动"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path" : "pages/comments/comments",
+			"style" : 
+			{
+				"navigationBarTitleText" : "用户评价"
+			}
+		},
+		{
+			"path" : "pages/secondArea/secondArea",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/shop/shop",
+			"style" : 
+			{
+				"navigationBarTitleText" : "商城"
+			}
+		},
+		{
+			"path" : "pages/thirdArea/thirdArea",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/course/course",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path": "pages/webview/webview",
+			"style": {
+				"navigationBarTitleText": "虚拟探索"
+			}
+		},
+		{
+			"path" : "pages/calendar/calendar",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/UserInfo/UserInfo",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/history/history",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/details/details",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/shopDetail/shopDetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/interactions/interactions",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/InteractionDetails/InteractionDetails",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/share/share",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/CommentDetails/CommentDetails",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		}
+		
+	],
+	
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#2979ff",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "white",
+		"height": "50px",
+		"fontSize": "16px",
+		"iconWidth": "24px",
+		"list": [
+			{
+				"pagePath": "pages/home/home",
+				"text": "活动",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home-click.png"
+			},
+			{
+				"pagePath": "pages/shop/shop",
+				"text": "商城",
+				"iconPath": "static/tabbar/cart-empty.png",
+				"selectedIconPath": "static/tabbar/cart-empty-fill.png"
+			},
+			{
+				"pagePath": "pages/interactions/interactions",
+				"text": "互动",
+				"iconPath": "static/tabbar/community.png",
+				"selectedIconPath": "static/tabbar/community-click.png"
+			},
+			{
+				"pagePath": "pages/UserInfo/UserInfo",
+				"text": "我的",
+				"iconPath": "static/tabbar/my.png",
+				"selectedIconPath": "static/tabbar/my-click.png"
+			}
+		]
+	},
+	"uniIdRouter": {}
+	
+}

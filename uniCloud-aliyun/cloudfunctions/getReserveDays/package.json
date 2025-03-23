@@ -1,0 +1,7 @@
+{
+  "name": "getReserveDays",
+  "dependencies": {},
+  "extensions": {
+    "uni-cloud-jql": {}
+  }
+}
