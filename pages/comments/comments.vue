@@ -31,24 +31,6 @@
 			</view>
 		</view>
 
-		<!-- 评论筛选 -->
-		<view class="filter-section">
-			<scroll-view 
-				scroll-x 
-				class="tabs-scroll"
-				:scroll-with-animation="true"
-				:show-scrollbar="false"
-			>
-				<view class="title">
-					<text 
-						v-for="(tab, index) in filterTabs" 
-						:key="index"
-						:class="{ active: currentTab === index }"
-						@tap="handleTabChange(index)"
-					>{{tab.text}}</text>
-				</view>
-			</scroll-view>
-		</view>
 
 		<!-- 评论列表 -->
 		<view class="new-review-list">
@@ -84,22 +66,7 @@
 							></image>
 						</view>
 					</view>
-					<!-- 商家回复 -->
-					<view class="merchant-reply" v-if="item.reply">
-						<u-icon name="chat" size="28" color="#666"></u-icon>
-						<text class="reply-text">商家回复：{{item.reply}}</text>
-					</view>
-					<!-- 操作按钮 -->
-					<view class="review-actions">
-						<view class="action-item">
-							<u-icon name="thumb-up" size="28" :color="item.isLiked ? '#ff9900' : '#999'"></u-icon>
-							<text :class="['action-text', item.isLiked ? 'active' : '']">{{item.likes || 0}}</text>
-						</view>
-						<view class="action-item">
-							<u-icon name="chat" size="28" color="#999"></u-icon>
-							<text class="action-text">回复</text>
-						</view>
-					</view>
+					
 				</view>
 			</view>
 		</view>
@@ -133,9 +100,6 @@
 							{ src: '/static/logo.png' },
 							{ src: '/static/logo.png' }
 						],
-						reply: '感谢您的支持，我们会继续努力提供更好的课程！',
-						likes: 12,
-						isLiked: false
 					},
 					{
 						avatar: '/static/logo.png',
@@ -143,8 +107,6 @@
 						rating: 4,
 						time: '2024-03-18',
 						content: '整体不错，就是有些地方讲得有点快。',
-						likes: 8,
-						isLiked: true
 					},
 					{
 						avatar: '/static/logo.png',
@@ -152,8 +114,6 @@
 						rating: 5,
 						time: '2024-03-17',
 						content: '课程质量很高，学到了很多，希望能有更多类似的课程。',
-						likes: 15,
-						isLiked: false
 					}
 				],
 				// 评分统计
@@ -165,15 +125,7 @@
 					{ percentage: 1 },
 					{ percentage: 1 }
 				],
-				// 筛选标签
-				filterTabs: [
-					{ text: '全部' },
-					{ text: '最新' },
-					{ text: '好评' },
-					{ text: '有图' },
-					{ text: '已回复' }
-				],
-				currentTab: 0,
+				
 				// 加载状态
 				loadStatus: 'loadmore', // loadmore, loading, nomore
 				page: 1,
@@ -181,11 +133,6 @@
 			}
 		},
 		methods: {
-			// 处理标签切换
-			handleTabChange(index) {
-				this.currentTab = index;
-				this.loadComments(this.filterTabs[index].text);
-			},
 			
 			// 加载更多
 			loadMore() {
@@ -201,15 +148,6 @@
 						this.loadStatus = 'loadmore';
 					}
 				}, 1000);
-			},
-			
-			// 加载评价数据
-			loadComments(type) {
-				// 这里可以根据type调用不同的接口获取评价数据
-				console.log('加载类型：', type);
-				// 重置页码和加载状态
-				this.page = 1;
-				this.loadStatus = 'loadmore';
 			},
 			
 			// 预览图片
@@ -296,72 +234,6 @@
 	}
 }
 
-.filter-section {
-	background-color: #ffffff;
-	margin-bottom: 20rpx;
-	border-radius: 12rpx;
-	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
-	padding: 20rpx 0;
-	overflow: hidden;
-	
-	.tabs-scroll {
-		width: 100%;
-		white-space: nowrap;
-		
-		::-webkit-scrollbar {
-			display: none;
-			width: 0;
-			height: 0;
-			color: transparent;
-		}
-	}
-	
-	.title {
-		display: inline-flex;
-		justify-content: center;
-		padding: 0 30rpx;
-		gap: 60rpx;
-		font-size: 32rpx;
-		color: #333333;
-		width: fit-content;
-		margin: 0 auto;
-		
-		text {
-			position: relative;
-			padding: 8rpx 12rpx;
-			font-weight: 500;
-			transition: all 0.3s ease;
-			white-space: nowrap;
-			
-			&:active {
-				opacity: 0.8;
-			}
-			
-			&::after {
-				content: '';
-				position: absolute;
-				bottom: -4rpx;
-				left: 50%;
-				transform: translateX(-50%);
-				width: 0;
-				height: 4rpx;
-				background: #ff9900;
-				border-radius: 4rpx;
-				transition: all 0.3s ease;
-			}
-			
-			&.active {
-				color: #ff9900;
-				font-weight: bold;
-				transform: scale(1.05);
-				
-				&::after {
-					width: 80%;
-				}
-			}
-		}
-	}
-}
 
 .new-review-list {
 	.review-card {
@@ -431,7 +303,7 @@
 				background-color: #f8f8f8;
 				padding: 20rpx;
 				border-radius: 8rpx;
-				margin-bottom: 20rpx;
+				margin-bottom: 10rpx;
 				display: flex;
 				align-items: flex-start;
 				
@@ -441,29 +313,6 @@
 					color: #666;
 					margin-left: 10rpx;
 					line-height: 1.5;
-				}
-			}
-			
-			.review-actions {
-				display: flex;
-				align-items: center;
-				border-top: 2rpx solid #f5f5f5;
-				padding-top: 20rpx;
-				
-				.action-item {
-					display: flex;
-					align-items: center;
-					margin-right: 40rpx;
-					
-					.action-text {
-						font-size: 26rpx;
-						color: #999;
-						margin-left: 8rpx;
-						
-						&.active {
-							color: #ff9900;
-						}
-					}
 				}
 			}
 		}

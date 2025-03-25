@@ -10,20 +10,14 @@
 		{
 			"path" : "pages/home/home",
 			"style" : {
-				"navigationBarTitleText" : "活动"
-			}
-		},
-		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText" : ""
 			}
 		},
 		{
 			"path" : "pages/comments/comments",
 			"style" : 
 			{
-				"navigationBarTitleText" : "用户评价"
+				"navigationBarTitleText" : ""
 			}
 		},
 		{
@@ -37,7 +31,7 @@
 			"path" : "pages/shop/shop",
 			"style" : 
 			{
-				"navigationBarTitleText" : "商城"
+				"navigationBarTitleText" : ""
 			}
 		},
 		{
@@ -57,7 +51,7 @@
 		{
 			"path": "pages/webview/webview",
 			"style": {
-				"navigationBarTitleText": "虚拟探索"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
@@ -121,6 +115,14 @@
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path": "pages/settings/userSettings",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#ffffff",
+				"navigationBarTextStyle": "black"
 			}
 		}
 		

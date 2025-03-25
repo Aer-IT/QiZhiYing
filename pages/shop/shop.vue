@@ -55,8 +55,8 @@
 						<view class="goods-info">
 							<text class="goods-name">{{item.name}}</text>
 							<view class="price-row">
-								<text class="price">¥{{item.price}}</text>
-								<text class="sold">已售{{item.sold}}件</text>
+								<text class="price">{{item.points}} 积分</text>
+								<text class="sold">已兑{{item.sold}}件</text>
 							</view>
 						</view>
 					</view>
@@ -76,9 +76,30 @@
 					{
 						id: 1,
 						name: '商品1',
-						price: '99.00',
+						points: 990,
 						sold: 999,
 						image: '/static/goods/1.png'
+					},
+					{
+						id: 2,
+						name: '商品2',
+						points: 1500,
+						sold: 678,
+						image: '/static/goods/2.png'
+					},
+					{
+						id: 3,
+						name: '商品3',
+						points: 2500,
+						sold: 456,
+						image: '/static/goods/3.png'
+					},
+					{
+						id: 4,
+						name: '商品4',
+						points: 800,
+						sold: 321,
+						image: '/static/goods/4.png'
 					},
 					// ... 更多商品数据
 				],

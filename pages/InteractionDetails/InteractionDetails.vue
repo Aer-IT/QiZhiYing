@@ -213,6 +213,13 @@ export default {
 		
 		// 跳转到分享页面
 		goToShare() {
+			if(!this.$store.state.user.userInfo){
+				uni.showToast({
+					title:'用户未登录,无法分享内容',
+					icon:'none'
+				})
+				return
+			}
 			uni.navigateTo({
 				url: `/pages/share/share?type=${this.type}`
 			});
