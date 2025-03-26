@@ -6,7 +6,8 @@ const state = {
         gender: 0,
         history: [],
         reserveInfo: [],
-        _id:''
+        _id:'',
+        points:0
     }
 }
 
@@ -19,17 +20,7 @@ const mutations = {
         }
     },
     
-    // 清除用户信息
-    CLEAR_USER_INFO(state) {
-        state.userInfo = {
-            avatarUrl: '',
-            nickName: '',
-            mobile: '',
-            gender: 0,
-            history: [],
-            reserveInfo: []
-        }
-    }
+   
 }
 
 const actions = {

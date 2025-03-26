@@ -246,7 +246,7 @@ export default {
 		// 跳转到二级页面
 		toSecondArea(item) {
 			uni.navigateTo({
-				url: `/pages/secondArea/secondArea?type=${item.type}`
+				url: `/pages/home/secondArea?type=${item.type}`
 			});
 		}
 	},

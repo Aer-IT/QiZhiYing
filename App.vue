@@ -14,7 +14,8 @@
 					gender: data.gender || 0,
 					history: data.history || [],
 					reserveInfo: data.reserveInfo || [],
-					_id: data._id
+					_id: data._id,
+					points: data.points || 0
 				}
 				this.$store.commit('user/UPDATE_USER_INFO', userInfo)
 			}

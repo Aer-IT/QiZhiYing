@@ -6,7 +6,7 @@
 				<text class="title">自然笔记</text>
 				<text class="subtitle">记录你与自然的美好时刻</text>
 			</view>
-			<view class="section-content" @tap="navigateTo('/pages/InteractionDetails/InteractionDetails?type=1')">
+			<view class="section-content" @tap="navigateTo('/pages/interaction/InteractionDetails?type=1')">
 				<u-icon name="edit-pen" size="80" color="#19be6b"></u-icon>
 				<view class="content-text">
 					<text class="main-text">今天的发现</text>
@@ -21,7 +21,7 @@
 				<text class="title">亲子时光</text>
 				<text class="subtitle">珍贵的家庭互动记录</text>
 			</view>
-			<view class="section-content" @tap="navigateTo('/pages/InteractionDetails/InteractionDetails?type=2')">
+			<view class="section-content" @tap="navigateTo('/pages/interaction/InteractionDetails?type=2')">
 				<u-icon name="heart" size="80" color="#ff9900"></u-icon>
 				<view class="content-text">
 					<text class="main-text">记录精彩瞬间</text>

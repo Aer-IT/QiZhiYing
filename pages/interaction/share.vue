@@ -187,7 +187,7 @@ export default {
 					// 减少上传计数
 					this.uploadingCount--;
 					
-					// 尝试调用上传云函数处理文件元数据
+					// 调用云函数处理文件元数据
 					try {
 						const { result } = await uniCloud.callFunction({
 							name: 'upload',
@@ -201,8 +201,8 @@ export default {
 							// 预处理图片URL，用于前端显示
 							this.getTempFileURL(uploadResult.fileID, fileIndex);
 						} else {
-							console.warn('云函数处理文件元数据失败:', result);
-							// 即使云函数处理失败，文件已上传成功，仍可以继续
+							console.warn('云函数处理失败:', result);
+							// 即使处理失败，文件已上传成功，仍可以继续
 							this.getTempFileURL(uploadResult.fileID, fileIndex);
 						}
 					} catch (cloudFuncError) {
@@ -273,13 +273,13 @@ export default {
 			try {
 				// 如果图片已上传到云存储，尝试删除云存储上的文件
 				if (file.status === 'success' && file.url && file.url.indexOf('cloud://') === 0) {
+					// 显示删除中状态
+					uni.showLoading({
+						title: '删除中...'
+					});
+					
+					// 调用云函数删除云存储中的文件
 					try {
-						// 显示删除中状态
-						uni.showLoading({
-							title: '删除中...'
-						});
-						
-						// 调用云函数删除云存储中的文件
 						const { result } = await uniCloud.callFunction({
 							name: 'deleteFile',
 							data: {
@@ -287,9 +287,9 @@ export default {
 							}
 						});
 						
-						console.log('云存储文件删除结果:', result);
-					} catch (deleteError) {
-						console.warn('删除云存储文件失败:', deleteError);
+						console.log('云函数删除文件结果:', result);
+					} catch (deleteCallError) {
+						console.warn('删除云存储文件失败:', deleteCallError);
 						// 即使删除云存储文件失败，仍然从界面上移除
 					} finally {
 						uni.hideLoading();

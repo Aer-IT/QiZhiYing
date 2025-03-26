@@ -14,14 +14,14 @@
 			}
 		},
 		{
-			"path" : "pages/comments/comments",
+			"path" : "pages/home/comments",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/secondArea/secondArea",
+			"path" : "pages/home/secondArea",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -35,7 +35,7 @@
 			}
 		},
 		{
-			"path" : "pages/thirdArea/thirdArea",
+			"path" : "pages/home/thirdArea",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -49,13 +49,13 @@
 			}
 		},
 		{
-			"path": "pages/webview/webview",
+			"path": "pages/course/webview",
 			"style": {
 				"navigationBarTitleText": ""
 			}
 		},
 		{
-			"path" : "pages/calendar/calendar",
+			"path" : "pages/course/calendar",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -69,56 +69,35 @@
 			}
 		},
 		{
-			"path" : "pages/history/history",
+			"path" : "pages/shop/shopDetail",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/details/details",
+			"path" : "pages/interaction/interactions",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/shopDetail/shopDetail",
+			"path" : "pages/interaction/InteractionDetails",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/interactions/interactions",
+			"path" : "pages/interaction/share",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/InteractionDetails/InteractionDetails",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/share/share",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/CommentDetails/CommentDetails",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path": "pages/settings/userSettings",
+			"path": "pages/UserInfo/userSettings",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#ffffff",
@@ -156,7 +135,7 @@
 				"selectedIconPath": "static/tabbar/cart-empty-fill.png"
 			},
 			{
-				"pagePath": "pages/interactions/interactions",
+				"pagePath": "pages/interaction/interactions",
 				"text": "互动",
 				"iconPath": "static/tabbar/community.png",
 				"selectedIconPath": "static/tabbar/community-click.png"

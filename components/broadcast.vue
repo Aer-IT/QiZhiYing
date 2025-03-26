@@ -2,7 +2,7 @@
 	<!-- 用户评价滚动广播 -->
 	<view class="notice-wrapper" @click="toComments()">
 		<view class="notice-header">
-			<uni-icons type="notification" size="18" color="#2979ff"></uni-icons>
+			<u-icon name="volume" size="18" color="#2979ff"></u-icon>
 			<text class="notice-title">最新评价</text>
 		</view>
 		<swiper
@@ -35,7 +35,7 @@
 		methods: {
 			toComments() {
 				uni.navigateTo({
-					url: '/pages/comments/comments?type=1'
+					url: '/pages/home/comments?type=1'
 				})
 			}
 		}

@@ -8,7 +8,7 @@
 					<view class="avatar-display">
 						<image 
 							class="avatar-image"
-							:src="userInfo.avatar || '/static/logo.png'"
+							:src="userInfo.avatarUrl || '/static/logo.png'"
 							mode="aspectFill"
 						></image>
 					</view>
@@ -22,7 +22,7 @@
 			</view>
 
 			<!-- 设置按钮 -->
-			<view class="settings-btn" @tap="navigateTo('/pages/settings/userSettings')">
+			<view class="settings-btn" @tap="navigateTo('/pages/UserInfo/userSettings')">
 				<u-icon name="setting-fill" size="36" color="#999"></u-icon>
 			</view>
 		</view>

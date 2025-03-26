@@ -157,7 +157,7 @@
 			// 跳转到商品详情
 			goToDetail(id) {
 				uni.navigateTo({
-					url: `/pages/shopDetail/shopDetail?id=${id}`
+					url: `/pages/shop/shopDetail?id=${id}`
 				});
 			}
 		}

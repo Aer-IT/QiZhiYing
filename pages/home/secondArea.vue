@@ -98,7 +98,7 @@ export default {
 	methods: {
 		toThirdArea(item) {
 			uni.navigateTo({
-				url: `/pages/thirdArea/thirdArea?type=${this.type}&sectype=${item.sectype}`
+				url: `/pages/home/thirdArea?type=${this.type}&sectype=${item.sectype}`
 			})
 		}
 	}

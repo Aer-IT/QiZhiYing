@@ -23,12 +23,35 @@
 			<u-icon name="arrow-right" color="#2979ff" size="16"></u-icon>
 		</view>
 
-		<!-- 轮播图 -->
-		<carousel 
-			:height="300" 
-			:img="carouselImages"
-			v-if="!courseInfo.online"
-		></carousel>
+		<!-- 轮播图 - 所有课程都显示图片轮播 -->
+		<view class="carousel-container" v-if="courseInfo.image ">
+			<swiper
+				class="swiper"
+				:autoplay="true"
+				:interval="3000"
+				:circular="true"
+				@change="onChange"
+				:style="{ height: 300 + 'rpx' }"
+			>
+				<swiper-item v-for="(item, index) in carouselImages" :key="index">
+					<image 
+						:src="item.image" 
+						mode="aspectFill"
+						class="swiper-image"
+					/>
+				</swiper-item>
+			</swiper>
+			
+			<!-- 将指示器移到swiper外部 -->
+			<view class="indicator-wrapper">
+				<view 
+					class="indicator-dot" 
+					v-for="(item, index) in carouselImages" 
+					:key="index"
+					:class="{ active: current === index }"
+				></view>
+			</view>
+		</view>
 
 		<!-- 课程内容区域 -->
 		<view class="content-section">
@@ -44,7 +67,7 @@
 			</view>
 			
 			<!-- 教师介绍 -->
-			<view class="teacher-intro" v-for="(item,index) in courseInfo.teacherInfo" :key="index">
+			<view class="teacher-intro" v-for="(item,index) in (courseInfo.teacherInfo || [])" :key="index">
 				<view class="section-title">
 					<view class="title-bar"></view>
 					<text class="title-text">教师介绍</text>
@@ -69,7 +92,9 @@
 					<view class="title-bar"></view>
 					<text class="title-text">用户评价</text>
 				</view>
-				<broadcast></broadcast>
+				<view class="broadcast-container">
+					<broadcast></broadcast>
+				</view>
 			</view>
 		</view>
 
@@ -90,18 +115,17 @@
 
 <script>
 import Broadcast from '@/components/broadcast.vue'
-import Carousel from '@/components/carousel.vue'
 export default {
 	
 	components: {
-		Broadcast,
-		Carousel
+		Broadcast
 	},
 	data() {
 		return {
 			courseId: '',
 			courseInfo: {}, // 课程信息
-			vrLink: 'https://www.bilibili.com/' // 虚拟探索网页链接
+			vrLink: 'https://www.bilibili.com/', // 虚拟探索网页链接
+			current: 0, // 当前轮播图索引
 		}
 	},
 	
@@ -116,9 +140,17 @@ export default {
 	},
 	
 	onLoad(e) {
-		this.courseId = e._id;
+		// 兼容不同参数名
+		this.courseId = e._id || e.id || e.courseId || '';
 		console.log('获取课程ID:', this.courseId);
-		this.getCourseDetail();
+		if (this.courseId) {
+			this.getCourseDetail();
+		} else {
+			uni.showToast({
+				title: '课程ID无效',
+				icon: 'none'
+			});
+		}
 	},
 	
 	methods: {
@@ -147,12 +179,16 @@ export default {
 				});
 			}
 		},
+		onChange(e) {
+				this.current = e.detail.current
+				// 触发切换事件，传递索引给父组件
+			},
 		// 跳转到虚拟探索网页
 		toVRExplore() {
 			if(this.vrLink) {
 				// 使用web-view跳转到网页
 				uni.navigateTo({
-					url: `/pages/webview/webview?url=${encodeURIComponent(this.vrLink)}`
+					url: `/pages/course/webview?url=${encodeURIComponent(this.vrLink)}`
 				})
 			} else {
 				uni.showToast({
@@ -164,17 +200,17 @@ export default {
 		// 跳转到报名页面
 		toSignup() {
 			uni.navigateTo({
-				url: `/pages/calendar/calendar?id=${this.courseId}`
+				url: `/pages/course/calendar?id=${this.courseId}`
 			})
 		},
 		// 添加分享方法
 		onShareAppMessage() {
 			return {
-				title: this.courseInfo.introduction,
+				title: this.courseInfo.title || this.courseInfo.introduction || '课程分享',
 				path: `/pages/course/course?id=${this.courseId}`,
-				imageUrl: this.courseInfo.displayImg
+				imageUrl: this.courseInfo.displayImg || this.courseInfo.videoPoster || (this.courseInfo.image && this.courseInfo.image.length > 0 ? this.courseInfo.image[0] : '')
 			}
-		}
+		}	
 	}
 }
 </script>
@@ -185,6 +221,52 @@ export default {
 	background-color: #f8f9fa;
 	padding-bottom: 120rpx;
 	min-height: 100vh;
+}
+
+.carousel-container {
+	width: 100%;
+	position: relative;
+	border-radius: 12rpx;
+	overflow: hidden;
+	box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.1);
+	margin: 20rpx;
+	
+	.swiper {
+		width: 100%;
+		border-radius: 12rpx;
+	}
+	
+	.swiper-image {
+		width: 100%;
+		height: 100%;
+		border-radius: 12rpx;
+	}
+	
+	.indicator-wrapper {
+		position: absolute;
+		bottom: 20rpx;
+		left: 0;
+		right: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 1;
+		
+		.indicator-dot {
+			width: 12rpx;
+			height: 12rpx;
+			border-radius: 50%;
+			background-color: rgba(255, 255, 255, 0.5);
+			margin: 0 8rpx;
+			transition: all 0.3s;
+			
+			&.active {
+				width: 24rpx;
+				border-radius: 6rpx;
+				background-color: #ffffff;
+			}
+		}
+	}
 }
 
 .video-section {
@@ -335,7 +417,7 @@ export default {
 	.review-section {
 		margin-bottom: 20rpx;
 		
-		.broadcast {
+		.broadcast-container {
 			margin: 16rpx 30rpx;
 		}
 	}

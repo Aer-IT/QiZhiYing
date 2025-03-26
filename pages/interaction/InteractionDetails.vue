@@ -136,7 +136,7 @@ export default {
 		// 跳转到评论页面
 		goToComments(postId) {
 			uni.navigateTo({
-				url: `/pages/comments/comments?postId=${postId}`
+				url: `/pages/home/comments?postId=${postId}`
 			});
 		},
 		
@@ -221,7 +221,7 @@ export default {
 				return
 			}
 			uni.navigateTo({
-				url: `/pages/share/share?type=${this.type}`
+				url: `/pages/interaction/share?type=${this.type}`
 			});
 		}
 	}
