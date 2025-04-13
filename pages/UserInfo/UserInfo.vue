@@ -2,7 +2,7 @@
 	<view class="user-info">
 		<!-- 顶部个人信息区域 -->
 		<view class="top-section">
-			<view class="profile-container">
+			<view class="profile-container" @tap="goToLogin">
 				<!-- 头像区域 -->
 				<view class="avatar-section">
 					<view class="avatar-display">
@@ -113,7 +113,11 @@ export default {
 	computed: {
 		...mapState({
 			userInfo: state => state.user.userInfo || {}
-		})
+		}),
+		// 计算用户是否已登录
+		isLoggedIn() {
+			return !!(this.userInfo && this.userInfo._id);
+		}
 	},
 	
 	onShow() {
@@ -134,6 +138,16 @@ export default {
 			uni.navigateTo({
 				url
 			});
+		},
+		
+		// 判断是否跳转到登录页面
+		goToLogin() {
+			if (!this.isLoggedIn) {
+				uni.navigateTo({
+					url: '/pages/login/login'
+				});
+			}
+			// 如果已登录，不执行任何操作
 		}
 	}
 }

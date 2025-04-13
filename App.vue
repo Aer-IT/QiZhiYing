@@ -16,6 +16,7 @@
 					reserveInfo: data.reserveInfo || [],
 					_id: data._id,
 					points: data.points || 0
+					
 				}
 				this.$store.commit('user/UPDATE_USER_INFO', userInfo)
 			}
@@ -44,10 +45,6 @@
 					// 存储用户信息到 vuex
 					this.updateUserInfo(result.result.data[0])
 					
-					uni.showToast({
-						title: '登录成功',
-						icon: 'success'
-					});
 				} else {
 					console.error('登录失败:', result.result.msg);
 					uni.showToast({

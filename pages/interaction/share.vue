@@ -354,16 +354,20 @@ export default {
 					.map(file => file.url);
 				
 				const shareData = {
+					name: this.$store.state.user.userInfo.nickName,
+					avatar: this.$store.state.user.userInfo.avatarUrl,
+					userId: this.$store.state.user.userInfo._id,
 					type: this.type,
 					content: this.content,
 					images: imageIds,
-					courseName: this.selectedCourse
+					courseName: this.selectedCourse,
+					postTime: new Date().toLocaleString()
 				};
 				
 				console.log('提交的分享数据:', shareData);
 				
 				const { result } = await uniCloud.callFunction({
-					name: 'createShare',
+					name: 'postShare',
 					data: shareData
 				});
 				
@@ -375,12 +379,12 @@ export default {
 					
 					// 延迟返回，让用户看到成功提示
 					setTimeout(() => {
-						uni.reLaunch({
-							url: '/pages/InteractionDetails/InteractionDetails'
-						})
+						uni.navigateBack({
+							delta: 1
+						});
 					}, 1500);
 				} else {
-					throw new Error(result.message || '发布失败');
+					throw new Error(result.msg || '发布失败');
 				}
 				
 			} catch (e) {

@@ -1,0 +1,12 @@
+{
+	"name": "postShare",
+	"version": "1.0.0",
+	"description": "保存用户分享内容到数据库",
+	"main": "index.js",
+	"dependencies": {},
+	"cloudfunction-config": {
+		"memorySize": 256,
+		"timeout": 10,
+		"triggers": []
+	}
+} 

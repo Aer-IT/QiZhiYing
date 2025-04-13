@@ -1,0 +1,55 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": false,
+		"delete": false
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"userId": {
+			"bsonType": "string",
+			"description": "用户ID"
+		},
+		"nickname": {
+			"bsonType": "string",
+			"description": "用户昵称"
+		},
+		"avatar": {
+			"bsonType": "string",
+			"description": "用户头像URL"
+		},
+		"type": {
+			"bsonType": "int",
+			"description": "分享类型：1-自然笔记，2-亲子时光",
+			"defaultValue": 1
+		},
+		"content": {
+			"bsonType": "string",
+			"description": "分享内容文字"
+		},
+		"images": {
+			"bsonType": "array",
+			"description": "分享的图片列表",
+			"items": {
+				"bsonType": "string"
+			}
+		},
+		"courseName": {
+			"bsonType": "string",
+			"description": "关联的课程名称"
+		},
+		"createTime": {
+			"bsonType": "timestamp",
+			"description": "创建时间"
+		},
+		"postTime": {
+			"bsonType": "string",
+			"description": "发布时间的字符串表示"
+		}
+	}
+} 

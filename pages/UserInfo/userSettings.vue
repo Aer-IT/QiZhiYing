@@ -14,7 +14,7 @@
 					<text class="item-label">头像</text>
 					<view class="item-content avatar-content">
 						<image 
-							:src="userInfo.avatarUrl|| '/static/logo.png'" 
+							:src="userInfo.avatarUrl || '/static/logo.png'" 
 							mode="aspectFill" 
 							class="avatar-image"
 						></image>

@@ -1,0 +1,12 @@
+{
+	"name": "getShareList",
+	"version": "1.0.0",
+	"description": "获取分享内容列表",
+	"main": "index.js",
+	"dependencies": {},
+	"cloudfunction-config": {
+		"memorySize": 256,
+		"timeout": 10,
+		"triggers": []
+	}
+} 

@@ -23,6 +23,7 @@
 					size="large"
 					:custom-style="buttonStyle"
 					@click="getUserInfo"
+					:disabled="isLoading"
 				>
 					<u-icon name="weixin-fill" color="#ffffff" size="20"></u-icon>
 					<text class="button-text">微信一键登录</text>
@@ -42,7 +43,6 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
 	data() {
@@ -55,97 +55,89 @@ export default {
 			}
 		}
 	},
-	computed: {
-		...mapGetters({
-			userInfo: 'user/userInfo',
-			isLogin: 'user/isLogin'
-		})
-	},
 	methods: {
-		...mapActions({
-			updateUserInfo: 'user/updateUserInfo'
-		}),
-		// 获取授权
-		getUserInfo() {
-			uni.showModal({
-				title: "温馨提示",
-				content: "正在请求获取您的个人信息",
-				confirmText: "确定登录",
-				confirmColor: "#2979ff",
-				cancelColor: "#999999",
-				success: (res) => {
-					if(res.confirm) {
-						this.isLoading = true;
-						uni.getUserProfile({
-							desc: '用于完善会员资料',
-							success: (info) => {
-								this.getLogin(info.userInfo);
-							},
-							fail: (err) => {
-								this.isLoading = false;
-								uni.showToast({
-									title: '获取信息失败',
-									icon: 'none'
-								});
-							}
-						});
-					}
+		// 更新用户信息到 vuex
+		updateUserInfo(data) {
+				const userInfo = {
+					avatarUrl: data.avatarUrl || '',
+					nickName: data.nickName || '',
+					mobile: data.mobile || '',
+					gender: data.gender || 0,
+					history: data.history || [],
+					reserveInfo: data.reserveInfo || [],
+					_id: data._id,
+					points: data.points || 0
+					
 				}
-			});
-		},
+				this.$store.commit('user/UPDATE_USER_INFO', userInfo)
+			},
 		
-		// 微信登录
-		getLogin(userInfo) {
-			uni.login({
-				provider: 'weixin',
-				success: (res) => {
-					uniCloud.callFunction({
-						name: 'Login',
-						data: {
-							userinfo: userInfo,
-							code: res.code
-						}
-					}).then(result => {
-						this.isLoading = false;
-						if(result.result.code === 0) {
-							// 存储用户信息到vuex
-							this.updateUserInfo(result.result.data[0]);
-							// 存储token
-							uni.setStorageSync('Token', result.result.data[0].token);
-							
-							uni.showToast({
-								title: '登录成功',
-								icon: 'success'
-							});
-							
-							// 跳转到首页
-							setTimeout(() => {
-								uni.reLaunch({
-									url: '/pages/home/home'
-								});
-							}, 1500);
-						} else {
-							uni.showToast({
-								title: result.result.msg || '登录失败',
-								icon: 'none'
-							});
-						}
-					}).catch(err => {
-						this.isLoading = false;
-						uni.showToast({
-							title: '登录失败',
-							icon: 'none'
-						});
+		// 获取授权
+		async getUserInfo() {
+			if (this.isLoading) return; // 防止重复点击
+			
+			try {
+				this.isLoading = true; // 开始加载状态
+				
+				// 微信登录
+				const loginResult = await new Promise((resolve, reject) => {
+					uni.login({
+						provider: 'weixin',
+						success: res => resolve(res),
+						fail: err => reject(err)
 					});
-				},
-				fail: () => {
-					this.isLoading = false;
+				});
+				
+				// 调用云函数登录
+				const result = await uniCloud.callFunction({
+					name: 'Login',
+					data: {
+						code: loginResult.code
+					}
+				});
+				
+				if (result.result.code === 0) {
+					console.log('登录成功，用户信息：', result.result)
+					// 存储用户信息到 vuex
+					this.updateUserInfo(result.result.data[0])
+					
 					uni.showToast({
-						title: '登录失败',
+						title: '登录成功',
+						icon: 'success',
+						duration: 1500,
+						success: () => {
+							// 延迟跳转，让用户看到成功提示
+							setTimeout(() => {
+								// 跳转到首页或上一页
+								const pages = getCurrentPages();
+								if (pages.length > 1) {
+									uni.navigateBack(); // 如果有上一页，返回上一页
+								} else {
+									uni.switchTab({
+										url: '/pages/index/index' // 替换为你的首页路径
+									});
+								}
+							}, 1500);
+						}
+					});
+					
+				} else {
+					console.error('登录失败:', result.result.msg);
+					uni.showToast({
+						title: result.result.msg || '登录失败',
 						icon: 'none'
 					});
 				}
-			});
+				
+			} catch (error) {
+				console.error('登录过程出错:', error);
+				uni.showToast({
+					title: '登录失败',
+					icon: 'none'
+				});
+			} finally {
+				this.isLoading = false; // 结束加载状态
+			}
 		},
 		
 		// 显示隐私协议

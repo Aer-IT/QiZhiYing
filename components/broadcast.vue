@@ -26,9 +26,7 @@
 		data() {
 			return {
 				noticeList: [
-					'张三：课程非常棒，老师讲解很详细！',
-					'李四：学习氛围很好，收获满满',
-					'王五：课程设计很合理，推荐大家学习'
+					'暂无评价'
 				]
 			}
 		},
@@ -70,6 +68,7 @@
 				font-size: 26rpx;
 				color: #666;
 				line-height: 40rpx;
+				text-align: center;
 			}
 		}
 	}

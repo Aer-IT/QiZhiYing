@@ -5,9 +5,6 @@
 			scroll-y 
 			class="scroll-container"
 			@scrolltolower="loadMore"
-			:refresher-enabled="true"
-			:refresher-triggered="isRefreshing"
-			@refresherrefresh="onRefresh"
 		>
 			<view class="post-list">
 				<view 
@@ -50,18 +47,6 @@
 					<view class="course-tag" v-if="item.courseName">
 						<u-icon name="bookmark" size="24" color="#2979ff"></u-icon>
 						<text>{{item.courseName}}</text>
-					</view>
-					
-					<!-- 互动栏 -->
-					<view class="interaction-bar">
-						<view class="action-item" @tap="toggleLike(index)">
-							<u-icon name="thumb-up" size="32" :color="item.isLiked ? '#2979ff' : '#999'"></u-icon>
-							<text :class="['count', item.isLiked ? 'active' : '']">{{item.likeCount}}</text>
-						</view>
-						<view class="action-item" @tap="goToComments(item.id)">
-							<u-icon name="chat" size="32" color="#999"></u-icon>
-							<text class="count">{{item.commentCount}}</text>
-						</view>
 					</view>
 				</view>
 			</view>
@@ -108,7 +93,6 @@ export default {
 			pageSize: 5, // 每页数量
 			hasMore: true, // 是否还有更多
 			isLoading: false, // 是否正在加载
-			isRefreshing: false,
 			type: 1, // 页面类型：1-自然笔记，2-亲子时光
 		}
 	},
@@ -123,77 +107,79 @@ export default {
 	},
 	
 	methods: {
-		// 下拉刷新
-		async onRefresh() {
-			this.isRefreshing = true;
-			this.page = 1;
-			await this.loadInitialData();
-			this.isRefreshing = false;
-			// 重置加载更多状态
-			this.hasMore = true;
-		},
-		
-		// 跳转到评论页面
-		goToComments(postId) {
-			uni.navigateTo({
-				url: `/pages/home/comments?postId=${postId}`
-			});
-		},
-		
 		// 加载初始数据
 		async loadInitialData() {
-			this.postList = Array(5).fill({}).map((_, index) => ({
-				id: index + 1,
-				nickname: `用户${index + 1}`,
-				avatar: '/static/images/avatar.png',
-				content: '这是一段示例内容，描述用户的' + (this.type === 1 ? '自然观察笔记' : '亲子互动记录'),
-				images: index % 2 === 0 ? [
-					'/static/images/demo1.jpg',
-					'/static/images/demo2.jpg'
-				] : [],
-				time: '2024-03-20',
-				likeCount: Math.floor(Math.random() * 100),
-				commentCount: Math.floor(Math.random() * 50),
-				isLiked: false,
-				courseName: `示例课程${index + 1}` // 添加课程名称
-			}));
+			try {
+				this.isLoading = true;
+				
+				// 调用云函数获取分享内容列表
+				const { result } = await uniCloud.callFunction({
+					name: 'getShareList',
+					data: {
+						page: 1,
+						pageSize: this.pageSize,
+						type: this.type
+					}
+				});
+				
+				if (result.code === 0) {
+					this.postList = result.data || [];
+					this.hasMore = result.hasMore;
+					this.page = result.page;
+				} else {
+					uni.showToast({
+						title: result.msg || '获取数据失败',
+						icon: 'none'
+					});
+				}
+			} catch (e) {
+				console.error('加载数据失败:', e);
+				uni.showToast({
+					title: '加载数据失败',
+					icon: 'none'
+				});
+			} finally {
+				this.isLoading = false;
+			}
 		},
 		
 		// 加载更多
 		async loadMore() {
 			if (!this.hasMore || this.isLoading) return;
 			
-			this.isLoading = true;
-			
-			// 模拟请求延迟
-			await new Promise(resolve => setTimeout(resolve, 500));
-			
-			// 模拟加载更多数据
-			const newData = Array(5).fill({}).map((_, index) => ({
-				id: this.postList.length + index + 1,
-				nickname: `用户${this.postList.length + index + 1}`,
-				avatar: '/static/images/avatar.png',
-				content: '这是加载的更多内容示例',
-				images: index % 2 === 0 ? [
-					'/static/images/demo1.jpg',
-					'/static/images/demo2.jpg'
-				] : [],
-				time: '2024-03-20',
-				likeCount: Math.floor(Math.random() * 100),
-				commentCount: Math.floor(Math.random() * 50),
-				isLiked: false,
-				courseName: `示例课程${this.postList.length + index + 1}` // 添加课程名称
-			}));
-			
-			this.postList = [...this.postList, ...newData];
-			this.page++;
-			
-			// 模拟数据到达上限
-			if (this.page > 4) {
-				this.hasMore = false;
+			try {
+				this.isLoading = true;
+				
+				// 调用云函数获取下一页数据
+				const { result } = await uniCloud.callFunction({
+					name: 'getShareList',
+					data: {
+						page: this.page + 1,
+						pageSize: this.pageSize,
+						type: this.type
+					}
+				});
+				
+				if (result.code === 0) {
+					// 追加新数据
+					this.postList = [...this.postList, ...(result.data || [])];
+					this.hasMore = result.hasMore;
+					this.page = result.page;
+				} else {
+					uni.showToast({
+						title: result.msg || '获取更多数据失败',
+						icon: 'none'
+					});
+				}
+			} catch (e) {
+				console.error('加载更多数据失败:', e);
+				uni.showToast({
+					title: '加载更多数据失败',
+					icon: 'none'
+				});
+			} finally {
+				this.isLoading = false;
 			}
-			
-			this.isLoading = false;
 		},
 		
 		// 预览图片
@@ -202,13 +188,6 @@ export default {
 				urls: images,
 				current: images[current]
 			});
-		},
-		
-		// 点赞功能
-		toggleLike(index) {
-			const item = this.postList[index];
-			item.isLiked = !item.isLiked;
-			item.likeCount += item.isLiked ? 1 : -1;
 		},
 		
 		// 跳转到分享页面
@@ -310,29 +289,6 @@ export default {
 					font-size: 24rpx;
 					color: #2979ff;
 					margin-left: 8rpx;
-				}
-			}
-			
-			.interaction-bar {
-				display: flex;
-				align-items: center;
-				border-top: 2rpx solid #f5f5f5;
-				padding-top: 20rpx;
-				
-				.action-item {
-					display: flex;
-					align-items: center;
-					margin-right: 40rpx;
-					
-					.count {
-						font-size: 24rpx;
-						color: #999999;
-						margin-left: 8rpx;
-						
-						&.active {
-							color: #2979ff;
-						}
-					}
 				}
 			}
 		}

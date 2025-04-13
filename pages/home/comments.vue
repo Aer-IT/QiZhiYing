@@ -8,7 +8,7 @@
 			</view>
 			<view class="rating-overview">
 				<view class="overall-rating">
-					<text class="rating-num">4.8</text>
+					<text class="rating-num">0.0</text>
 					<u-rate 
 						v-model="averageRating" 
 						:readonly="true"
@@ -90,46 +90,7 @@
 			return {
 				// 评价列表
 				reviewList: [
-					{
-						avatar: '/static/logo.png',
-						username: '张三',
-						rating: 5,
-						time: '2024-03-19',
-						content: '课程内容很充实，老师讲解很详细，非常推荐！',
-						images: [
-							{ src: '/static/logo.png' },
-							{ src: '/static/logo.png' }
-						],
-					},
-					{
-						avatar: '/static/logo.png',
-						username: '李四',
-						rating: 4,
-						time: '2024-03-18',
-						content: '整体不错，就是有些地方讲得有点快。',
-					},
-					{
-						avatar: '/static/logo.png',
-						username: '王五',
-						rating: 5,
-						time: '2024-03-17',
-						content: '课程质量很高，学到了很多，希望能有更多类似的课程。',
-					}
-				],
-				// 评分统计
-				averageRating: 4.8,
-				ratingStats: [
-					{ percentage: 85 },
-					{ percentage: 10 },
-					{ percentage: 3 },
-					{ percentage: 1 },
-					{ percentage: 1 }
-				],
-				
-				// 加载状态
-				loadStatus: 'loadmore', // loadmore, loading, nomore
-				page: 1,
-				limit: 10
+				]
 			}
 		},
 		methods: {
