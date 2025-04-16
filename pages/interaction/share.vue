@@ -379,9 +379,7 @@ export default {
 					
 					// 延迟返回，让用户看到成功提示
 					setTimeout(() => {
-						uni.navigateBack({
-							delta: 1
-						});
+						uni.navigateBack()
 					}, 1500);
 				} else {
 					throw new Error(result.msg || '发布失败');

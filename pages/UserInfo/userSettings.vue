@@ -14,7 +14,7 @@
 					<text class="item-label">头像</text>
 					<view class="item-content avatar-content">
 						<image 
-							:src="userInfo.avatarUrl || '/static/logo.png'" 
+							:src="tempAvatarUrl || '/static/logo.png'" 
 							mode="aspectFill" 
 							class="avatar-image"
 						></image>
@@ -76,6 +76,8 @@ export default {
 			// 使用临时变量存储编辑的值
 			tempNickName: '',
 			tempPhoneNumber: '',
+			tempAvatarUrl: '', // 临时存储头像URL用于回显
+			avatarFileID: '', // 存储云存储fileID
 			nickName: '',
 			phoneNumber: ''
 		}
@@ -91,6 +93,8 @@ export default {
 		// 初始化临时变量
 		this.tempNickName = this.userInfo.nickName || '';
 		this.tempPhoneNumber = this.userInfo.mobile || '';
+		this.tempAvatarUrl = this.userInfo.avatarUrl || '';
+		this.avatarFileID = this.userInfo.avatarUrl || '';
 		this.nickName = this.userInfo.nickName || '';
 		this.phoneNumber = this.userInfo.mobile || '';
 	},
@@ -109,6 +113,9 @@ export default {
 						title: '更新中...'
 					});
 					
+					// 先在本地显示
+					this.tempAvatarUrl = avatarUrl;
+					
 					// 上传头像到云存储
 					const uploadResult = await uniCloud.uploadFile({
 						filePath: avatarUrl,
@@ -118,8 +125,11 @@ export default {
 					console.log('头像上传结果:', uploadResult);
 					
 					if (!uploadResult || !uploadResult.fileID) {
-						throw new Error('上传失败，未获取到fileID');
+						throw new Error('上传失败,未获取到fileID');
 					}
+					
+					// 保存文件ID，用于后续保存
+					this.avatarFileID = uploadResult.fileID;
 					
 					// 调用云函数处理文件元数据
 					const { result } = await uniCloud.callFunction({
@@ -131,17 +141,7 @@ export default {
 					
 					if (result && result.code === 0) {
 						console.log('云函数处理成功:', result);
-						
-						// 更新用户信息
-						this.updateUserInfo({
-							avatar: uploadResult.fileID
-						});
-						
 						uni.hideLoading();
-						uni.showToast({
-							title: '头像更新成功',
-							icon: 'success'
-						});
 					} else {
 						throw new Error(result?.message || '处理头像失败');
 					}
@@ -167,7 +167,8 @@ export default {
 					data: {
 						_id: this.userInfo._id,
 						nickName: this.tempNickName,
-						phoneNumber: this.tempPhoneNumber
+						phoneNumber: this.tempPhoneNumber,
+						avatarUrl: this.avatarFileID // 使用上传后的文件ID
 					}
 				});
 				
@@ -176,11 +177,14 @@ export default {
 					// 更新成功，更新本地状态
 					this.nickName = this.tempNickName;
 					this.phoneNumber = this.tempPhoneNumber;
+					
+					// 更新Vuex中的用户信息
 					this.updateUserInfo({
 						nickName: this.tempNickName,
-						mobile: this.tempPhoneNumber
+						mobile: this.tempPhoneNumber,
+						avatarUrl: this.avatarFileID
 					});
-					
+						
 					uni.showToast({
 						title: '保存成功',
 						icon: 'success'

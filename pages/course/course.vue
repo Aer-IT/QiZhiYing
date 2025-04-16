@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="container" v-if="hasCourse">
 		<!-- 视频播放区域 -->
 		<view class="video-section">
 			<video 
@@ -62,7 +62,35 @@
 					<text class="title-text">课程简介</text>
 				</view>
 				<view class="intro-content">
-					<text class="content-text">{{courseInfo.introduction || '暂无简介'}}</text>
+					<!-- 简介 -->
+					<text class="content-text">{{courseInfo.introduction.brief}}</text>
+					
+					<!-- 课程亮点 -->
+					<view class="highlight-section">
+						<view class="highlight-title">
+							<u-icon name="star-fill" size="24" color="#FFB800"></u-icon>
+							<text>课程亮点</text>
+						</view>
+						<view class="highlight-list">
+							<view 
+								class="highlight-item" 
+								v-for="(item, index) in courseInfo.introduction.highlight" 
+								:key="index"
+							>
+								<text class="highlight-num">{{index + 1}}</text>
+								<text class="highlight-text">{{item}}</text>
+							</view>
+						</view>
+					</view>
+					
+					<!-- 课程总结 -->
+					<view class="summary-section">
+						<view class="summary-title">
+							<u-icon name="checkmark-circle-fill" size="24" color="#2979ff"></u-icon>
+							<text>课程总结</text>
+						</view>
+						<text class="summary-text">{{courseInfo.introduction.summary}}</text>
+					</view>
 				</view>
 			</view>
 			
@@ -88,12 +116,41 @@
 			
 			<!-- 用户评价 -->
 			<view class="review-section">
-				<view class="section-title">
-					<view class="title-bar"></view>
-					<text class="title-text">用户评价</text>
+				<view class="section-header">
+					<view class="section-title">
+						<view class="title-bar"></view>
+						<text class="title-text">用户评价</text>
+					</view>
+					<view class="view-all" @click="toAllComments">
+						<text>查看全部</text>
+						<u-icon name="arrow-right" size="24" color="#666"></u-icon>
+					</view>
 				</view>
-				<view class="broadcast-container">
-					<broadcast></broadcast>
+				
+				<view class="review-list">
+					<view class="review-item" v-for="(item, index) in reviewList" :key="index">
+						<view class="reviewer-info">
+							<image :src="item.avatar" class="reviewer-avatar"></image>
+							<view class="reviewer-detail">
+								<view class="reviewer-name">{{item.name}}</view>
+								<view class="review-badge">
+									<u-icon name="star-fill" size="24" color="#FFB800"></u-icon>
+									<text>金牌会员</text>
+								</view>
+							</view>
+						</view>
+						<view class="review-content">{{item.content}}</view>
+						<view class="review-images" v-if="item.images && item.images.length">
+							<image 
+								v-for="(img, imgIndex) in item.images" 
+								:key="imgIndex" 
+								:src="img" 
+								mode="aspectFill"
+								class="review-image"
+								@click="previewImage(item.images, imgIndex)"
+							></image>
+						</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -126,6 +183,10 @@ export default {
 			courseInfo: {}, // 课程信息
 			vrLink: 'https://www.bilibili.com/', // 虚拟探索网页链接
 			current: 0, // 当前轮播图索引
+			hasCourse: false,
+			reviewList: [], // 清空静态数据
+			averageRating: 0,
+			totalReviews: 0
 		}
 	},
 	
@@ -154,6 +215,34 @@ export default {
 	},
 	
 	methods: {
+		// 获取评论列表
+		async getReviews() {
+			try {
+				const { result } = await uniCloud.callFunction({
+					name: 'getComments',
+					data: {
+						courseId: this.courseId,
+						page: 1,
+						pageSize: 3 // 只获取3条评论
+					}
+				});
+				
+				if (result.code === 0) {
+					this.reviewList = result.data.list.map(item => ({
+						avatar: item.avatar,
+						name: item.userName,
+						content: item.content,
+						images: item.imgList || [],
+						rating: item.rating
+					}));
+					this.averageRating = result.data.averageRating;
+					this.totalReviews = result.data.total;
+				}
+			} catch (e) {
+				console.error('获取评论失败:', e);
+			}
+		},
+		
 		async getCourseDetail() {
 			try {
 				const { result } = await uniCloud.callFunction({
@@ -163,12 +252,24 @@ export default {
 					}
 				});
 				if (result && result.data && result.data.length > 0) {
-					this.courseInfo = result.data[0]; // 获取数组中的第一个元素
-					console.log('result:',result)
+					this.courseInfo = result.data[0];
+					console.log('result:', result);
+					this.hasCourse = true;
+					// 获取评论数据
+					await this.getReviews();
 				} else {
 					uni.showToast({
-						title: '未找到课程信息',
-						icon: 'none'
+						title: '暂无课程信息',
+						icon: 'none',
+						duration: 2000,
+						mask: true,
+						complete: () => {
+							setTimeout(() => {
+								uni.navigateBack({
+									delta: 1
+								});
+							}, 1500);
+						}
 					});
 				}
 			} catch (e) {
@@ -210,7 +311,20 @@ export default {
 				path: `/pages/course/course?id=${this.courseId}`,
 				imageUrl: this.courseInfo.displayImg || this.courseInfo.videoPoster || (this.courseInfo.image && this.courseInfo.image.length > 0 ? this.courseInfo.image[0] : '')
 			}
-		}	
+		},
+		// 跳转到全部评论页面
+		toAllComments() {
+			uni.navigateTo({
+				url: `/pages/home/comments?id=${this.courseId}`
+			})
+		},
+		// 预览图片
+		previewImage(images, current) {
+			uni.previewImage({
+				urls: images,
+				current: images[current]
+			})
+		}
 	}
 }
 </script>
@@ -357,8 +471,88 @@ export default {
 			
 			.content-text {
 				font-size: 28rpx;
-				color: #666;
+				color: #333;
 				line-height: 1.8;
+				margin-bottom: 30rpx;
+			}
+			
+			.highlight-section {
+				background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+				padding: 24rpx;
+				border-radius: 12rpx;
+				margin-bottom: 30rpx;
+				
+				.highlight-title {
+					display: flex;
+					align-items: center;
+					margin-bottom: 20rpx;
+					
+					text {
+						font-size: 30rpx;
+						font-weight: 600;
+						color: #333;
+						margin-left: 12rpx;
+					}
+				}
+				
+				.highlight-list {
+					.highlight-item {
+						display: flex;
+						align-items: flex-start;
+						margin-bottom: 16rpx;
+						
+						&:last-child {
+							margin-bottom: 0;
+						}
+						
+						.highlight-num {
+							width: 36rpx;
+							height: 36rpx;
+							background-color: #FFB800;
+							color: #fff;
+							font-size: 24rpx;
+							border-radius: 50%;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							margin-right: 16rpx;
+							flex-shrink: 0;
+							margin-top: 4rpx;
+						}
+						
+						.highlight-text {
+							flex: 1;
+							font-size: 28rpx;
+							color: #666;
+							line-height: 1.6;
+						}
+					}
+				}
+			}
+			
+			.summary-section {
+				background: linear-gradient(135deg, #f0f5ff 0%, #fff 100%);
+				padding: 24rpx;
+				border-radius: 12rpx;
+				
+				.summary-title {
+					display: flex;
+					align-items: center;
+					margin-bottom: 20rpx;
+					
+					text {
+						font-size: 30rpx;
+						font-weight: 600;
+						color: #333;
+						margin-left: 12rpx;
+					}
+				}
+				
+				.summary-text {
+					font-size: 28rpx;
+					color: #666;
+					line-height: 1.6;
+				}
 			}
 		}
 	}
@@ -417,8 +611,89 @@ export default {
 	.review-section {
 		margin-bottom: 20rpx;
 		
-		.broadcast-container {
-			margin: 16rpx 30rpx;
+		.section-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 30rpx 30rpx 20rpx;
+			
+			.view-all {
+				display: flex;
+				align-items: center;
+				color: #666;
+				font-size: 26rpx;
+				
+				text {
+					margin-right: 4rpx;
+				}
+			}
+		}
+		
+		.review-list {
+			padding: 0 30rpx;
+			
+			.review-item {
+				padding: 24rpx 0;
+				border-bottom: 2rpx solid #f5f5f5;
+				
+				&:last-child {
+					border-bottom: none;
+				}
+				
+				.reviewer-info {
+					display: flex;
+					align-items: center;
+					margin-bottom: 16rpx;
+					
+					.reviewer-avatar {
+						width: 64rpx;
+						height: 64rpx;
+						border-radius: 50%;
+						margin-right: 16rpx;
+					}
+					
+					.reviewer-detail {
+						flex: 1;
+						
+						.reviewer-name {
+							font-size: 28rpx;
+							color: #333;
+							margin-bottom: 8rpx;
+						}
+						
+						.review-badge {
+							display: flex;
+							align-items: center;
+							font-size: 24rpx;
+							color: #FFB800;
+							
+							text {
+								margin-left: 8rpx;
+							}
+						}
+					}
+				}
+				
+				.review-content {
+					font-size: 28rpx;
+					color: #333;
+					line-height: 1.6;
+					margin-bottom: 16rpx;
+				}
+				
+				.review-images {
+					display: flex;
+					flex-wrap: wrap;
+					margin: 0 -8rpx;
+					
+					.review-image {
+						width: 180rpx;
+						height: 180rpx;
+						margin: 8rpx;
+						border-radius: 8rpx;
+					}
+				}
+			}
 		}
 	}
 }

@@ -75,33 +75,18 @@
 					// 模拟数据，实际应该从API获取
 					{
 						id: 1,
-						name: '商品1',
+						name: '侦探手册',
 						points: 990,
-						sold: 999,
-						image: '/static/goods/1.png'
+						sold: 1,
+						image: 'https://mp-3ce738d5-3af2-4532-97a0-d77a3922dde7.cdn.bspapp.com/static/微信图片_20250416113134.png'
 					},
 					{
 						id: 2,
-						name: '商品2',
+						name: '昆虫探险社',
 						points: 1500,
-						sold: 678,
-						image: '/static/goods/2.png'
-					},
-					{
-						id: 3,
-						name: '商品3',
-						points: 2500,
-						sold: 456,
-						image: '/static/goods/3.png'
-					},
-					{
-						id: 4,
-						name: '商品4',
-						points: 800,
-						sold: 321,
-						image: '/static/goods/4.png'
-					},
-					// ... 更多商品数据
+						sold: 1,
+						image: 'https://mp-3ce738d5-3af2-4532-97a0-d77a3922dde7.cdn.bspapp.com/static/微信图片_20250416113139.png'
+					}
 				],
 				currentPage: 0
 			};
@@ -156,9 +141,9 @@
 			
 			// 跳转到商品详情
 			goToDetail(id) {
-				uni.navigateTo({
-					url: `/pages/shop/shopDetail?id=${id}`
-				});
+				// uni.navigateTo({
+				// 	url: `/pages/shop/shopDetail?id=${id}`
+				// });
 			}
 		}
 	}

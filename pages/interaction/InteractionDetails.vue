@@ -105,6 +105,9 @@ export default {
 		});
 		this.loadInitialData();
 	},
+	onShow(){
+		this.loadInitialData();
+	},
 	
 	methods: {
 		// 加载初始数据

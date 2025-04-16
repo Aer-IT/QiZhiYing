@@ -43,6 +43,11 @@ function buildUpdateData(event) {
 		updateData.mobile = event.phoneNumber;
 	}
 	
+	// 添加处理头像URL的逻辑
+	if (event.avatarUrl) {
+		updateData.avatarUrl = event.avatarUrl;
+	}
+	
 	// 添加更新时间
 	updateData.updateTime = Date.now();
 	
@@ -76,7 +81,7 @@ exports.main = async (event, context) => {
 			// 获取更新后的用户数据
 			const updatedUser = await db.collection('user')
 				.doc(event._id)
-				.field({ nickName: 1, mobile: 1, avatar: 1 })
+				.field({ nickName: 1, mobile: 1, avatarUrl: 1 })
 				.get();
 				
 			return {

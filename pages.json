@@ -21,21 +21,7 @@
 			}
 		},
 		{
-			"path" : "pages/home/secondArea",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
 			"path" : "pages/shop/shop",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/home/thirdArea",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -63,13 +49,6 @@
 		},
 		{
 			"path" : "pages/UserInfo/UserInfo",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/shop/shopDetail",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""

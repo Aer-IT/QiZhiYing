@@ -14,7 +14,10 @@
 			:circular="true"
 		>
 			<swiper-item v-for="(item, index) in noticeList" :key="index">
-				<view class="notice-item">{{item}}</view>
+				<view class="notice-item">
+					<text class="user-name">{{item.userName}}：</text>
+					<text class="comment-content">{{item.content}}</text>
+				</view>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -25,15 +28,38 @@
 		name: 'broadcast',
 		data() {
 			return {
-				noticeList: [
-					'暂无评价'
-				]
+				noticeList: []
 			}
 		},
+		created() {
+			this.getLatestComments();
+		},
 		methods: {
+			// 获取最新评论列表
+			async getLatestComments() {
+				try {
+					const { result } = await uniCloud.callFunction({
+						name: 'getAllComments',
+						data: {
+							type: 'latest' // 获取最新评论
+						}
+					});
+					
+					if (result.code === 0 && result.data.list.length > 0) {
+						this.noticeList = result.data.list.map(item => ({
+							userName: item.userName,
+							content: item.content
+						}));
+					}
+				} catch (e) {
+					console.error('获取评论失败:', e);
+				}
+			},
+			
+			// 跳转到评论页面
 			toComments() {
 				uni.navigateTo({
-					url: '/pages/home/comments?type=1'
+					url: '/pages/home/comments'
 				})
 			}
 		}
@@ -68,7 +94,19 @@
 				font-size: 26rpx;
 				color: #666;
 				line-height: 40rpx;
-				text-align: center;
+				text-align: left;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				
+				.user-name {
+					color: #2979ff;
+					margin-right: 10rpx;
+				}
+				
+				.comment-content {
+					color: #666;
+				}
 			}
 		}
 	}

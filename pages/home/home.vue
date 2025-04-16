@@ -205,7 +205,7 @@ export default {
 				{
 					title: '绿色星球',
 					description: '探索自然奥秘，守护生态环境',
-					image: '/static/logo.png',
+					image: 'https://mp-3ce738d5-3af2-4532-97a0-d77a3922dde7.cdn.bspapp.com/cloudstorage/微信图片_20250413122330.png',
 					tag: '生态环保',
 					tagColor: 'rgba(103, 194, 58, 0.95)',
 					type: 1
@@ -213,18 +213,19 @@ export default {
 				{
 					title: '非遗传承',
 					description: '感受传统文化魅力，传承匠人精神',
-					image: '/static/logo.png',
+					image: 'https://mp-3ce738d5-3af2-4532-97a0-d77a3922dde7.cdn.bspapp.com/cloudstorage/微信图片_20250413122439.png',
 					tag: '非遗体验',
 					tagColor: 'rgba(230, 162, 60, 0.95)',
 					type: 2
-				},
+				},	
 				{
 					title: '探索发现',
 					description: '走进自然，探索科学奥秘',
-					image: '/static/logo.png',
+					image: 'https://mp-3ce738d5-3af2-4532-97a0-d77a3922dde7.cdn.bspapp.com/cloudstorage/5fa3f53c-a2ce-48a5-9766-05d0c9fe87ea.png',
 					tag: '野外考察',
 					tagColor: 'rgba(64, 158, 255, 0.95)',
-					type: 3
+					type: 3,
+					_id: '67be7c9ff2949cf7216a033e'
 				}
 			],
 			imgList:[]
@@ -246,7 +247,7 @@ export default {
 		// 跳转到二级页面
 		toSecondArea(item) {
 			uni.navigateTo({
-				url: `/pages/home/secondArea?type=${item.type}`
+				url: `/pages/course/course?id=${item._id}`
 			});
 		}
 	},
